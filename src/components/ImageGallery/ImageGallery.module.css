@@ -1,0 +1,13 @@
+.list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style-type: none;
+  padding: 10px;
+}
+
+.item {
+  overflow: hidden;
+  flex-basis: calc((100% - 30px) / 4);
+}

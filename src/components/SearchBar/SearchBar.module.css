@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b08a1;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.input {
+  width: 300px;
+  padding: 10px 10px;
+  border-radius: 3px;
+  border: none;
+}
+
+.button {
+  min-width: 50px;
+  padding: 10px 20px;
+  border-radius: 3px;
+  border: none;
+}
