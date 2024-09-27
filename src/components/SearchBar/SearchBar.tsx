@@ -2,10 +2,14 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import css from "./SearchBar.module.css";
 
-function SearchBar({ onSubmit }) {
-  const [value, setValue] = useState("");
+interface SubmitBarProps {
+  onSubmit: (value: string) => void;
+}
 
-  function handleSubmit(e) {
+const SearchBar: React.FC<SubmitBarProps> = ({ onSubmit }) => {
+  const [value, setValue] = useState<string>("");
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (value.trim() === "") {
       toast("Enter text to search for images", {
@@ -20,7 +24,7 @@ function SearchBar({ onSubmit }) {
     onSubmit(value);
   }
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
 
@@ -43,6 +47,6 @@ function SearchBar({ onSubmit }) {
       </form>
     </header>
   );
-}
+};
 
 export default SearchBar;

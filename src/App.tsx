@@ -7,36 +7,46 @@ import ImageModal from "./components/ImageModal/ImageModal";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import { ImageData, ApiResponse } from "./types";
 
 function App() {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [modalImage, setModalImage] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [images, setImages] = useState<ImageData[]>([]);
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalImage, setModalImage] = useState<ImageData | null>(null);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
+  const fetchImages = async (): Promise<void> => {
+    try {
+      setLoading(true);
+
+      const data: ApiResponse = await getImage(query, page);
+
+      setImages((prevImages: ImageData[]) => [...prevImages, ...data.results]);
+
+      setTotalPages(data.total_pages);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Unknown error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchImages() {
-      try {
-        setLoading(true);
-        const result = await getImage(query, page);
-        setHasMore(result.results.length > 0);
-        setImages((prevImages) => [...prevImages, ...result.results]);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
     if (query) {
       fetchImages();
     }
   }, [query, page]);
 
-  const handleSubmit = (value) => {
+  const handleSubmit = (value: string) => {
     setQuery(value);
     setPage(1);
     setImages([]);
@@ -44,19 +54,19 @@ function App() {
     setError(null);
   };
 
-  function openModal(image) {
+  const openModal = (image: ImageData) => {
     setIsOpen(true);
     setModalImage(image);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = (): void => {
     setIsOpen(false);
     setModalImage(null);
-  }
+  };
 
-  function imageLoadMore() {
-    setPage(page + 1);
-  }
+  const imageLoadMore = (): void => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
   return (
     <>
